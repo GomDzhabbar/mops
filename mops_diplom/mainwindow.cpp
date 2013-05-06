@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     gw = new GLW;
-    gw->setBaseSize(500,500);
+    gw->setBaseSize(600,600);
     gw->setMaximumSize(1000,1000);
 
 
