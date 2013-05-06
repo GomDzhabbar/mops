@@ -27,12 +27,6 @@ GLW::GLW()
     yTra = -0.5;
     zTra = 5;
 
- ///////////////////////.начинаем подгружать текстуры и информацию о картинах///////////////////////.
-   // QFile file1("C:\\image\\textur1.txt");
-    //s1 = "C:\\image\\01.jpg";
-   // QString str = QFileDialog::getOpenFileName(0,"OpenFile"," ","*.txt");
-
-
     QFile file("C://res//textur1.txt");
 
     if(!file.open(QIODevice::ReadOnly))
@@ -557,63 +551,6 @@ void GLW::wheelEvent(QWheelEvent* pe)
    if ((pe->delta())>0) scale_plus(); else if ((pe->delta())<0) scale_minus();
 
    updateGL();
-}
-
-void GLW::scale_plus()
-{
-   nSca = nSca*1.1;
-}
-
-void GLW::scale_minus()
-{
-   nSca = nSca/1.1;
-}
-
-void GLW::timerEvent(QTimerEvent *event){
-     updateGL();
-}
-
-int GLW::get(){
-    return WW;
-}
-void GLW::setW(){
-    if(WW < 9.5)
-    WW+=0.5;
- updateGL();
-}
-void GLW::setA(){
-    if(AA < 9.5)
-    AA+=0.5;
- updateGL();
-}
-
-void GLW::setS(){
-    if(WW > 0.5)
-    WW-=0.5;
- updateGL();
-}
-
-void GLW::setD(){
-    if(AA > -9.5)
-    AA-=0.5;
- updateGL();
-}
-void GLW::setY(){
-    if(YY >= -4.0)
-    YY-=0.5;
- updateGL();
-}
-void GLW::setYminis(){
-    if(YY < -0.5)
-    YY+=0.5;
- updateGL();
-}
-int GLW::getX(){
-    return AA;
-}
-
-int GLW::getZ(){
-    return WW;
 }
 
 void GLW::startTextur()
