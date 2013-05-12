@@ -63,12 +63,17 @@ public:
     void resizeGL(int width, int height);
     void scale_plus();
     void scale_minus();
+    bool createStart;
 
     // управление камерой -----//
     void step_forward();
     void step_back();
     void step_left();
     void step_right();
+    //-------------------------//
+    //  создаем стены   //
+    void createWall(int x1, int z1, int x2, int z2, int height, int rgb1, int rgb2, int rgb3);
+    void createGalery();
     //-------------------------//
 
 protected:

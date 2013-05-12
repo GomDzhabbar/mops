@@ -2,6 +2,8 @@
 #include <QtGui/QApplication>
 #include <qmessagebox.h>
 #include "math.h"
+#include "QString"
+#include <sstream>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/GLAUX.H>
@@ -14,6 +16,8 @@
 GLW::GLW()
 {
     startTimer(11 ); //64-65fps
+
+    createStart = true;
 
     nSca = 1;
 
@@ -33,15 +37,7 @@ GLW::GLW()
    // QString str = QFileDialog::getOpenFileName(0,"OpenFile"," ","*.txt");
 
 
-    QFile file("qwe.txt");
 
-    if(!file.open(QIODevice::ReadOnly))
-    {
-        qDebug() << "Error read";
-        textur1 = "C:\\image\\no_images.jpg";
-    }
-    textur1 = file.readAll();
-    qDebug() << textur1;
 
 
 ///////////////////////.///////////////////////.///////////////////////.///////////////////////.
@@ -55,7 +51,7 @@ void GLW::initializeGL()
 {
     //initialization of OpenGL
 
-    glClearColor(0.85f, 0.77f, 0.76f, 0.66f);
+    glClearColor(0.85f, 0.77f, 0.56f, 0.66f);
     //resizeGL( 10 , 10 );
 
     //glShadeModel( GL_SMOOTH );
@@ -92,7 +88,7 @@ void GLW::paintGL()
      glTranslatef(xTra, yTra, zTra);
 
      glEnable( GL_CULL_FACE );
-     glColor3ub( 139, 58 ,58  );
+     glColor3ub( 139, 58 ,58 );
      glBegin(GL_POLYGON);
        glVertex3f(-10,0,-10);
        glVertex3f(-10,0,0);
@@ -101,23 +97,7 @@ void GLW::paintGL()
      glEnd();
      glDisable( GL_CULL_FACE );
 
-     /*glBindTexture(GL_TEXTURE_2D, textureID[0]);
-     //01
-     glBegin(GL_POLYGON);
-     glColor3ub( 255.0f,255.0f,255.0f );
-     glTexCoord2f(0,0);
-     glVertex3f(-9,0.2f,-10);
-     glTexCoord2f(0,1);
-     glVertex3f(-9,1,-10);
-     glTexCoord2f(1,1);
-     glVertex3f(-8,1,-10);
-     glTexCoord2f(1,0);
-     glVertex3f(-8,0.2f,-10);
-     glEnd();
-     glBindTexture(GL_TEXTURE_2D, textureID[2]);*/
-
-
-
+     createGalery();
  }
 void GLW::resizeGL(int width, int height)
 {
@@ -139,8 +119,6 @@ void GLW::mousePressEvent(QMouseEvent *event)
 {
     m_ptPosition = event->pos();
    // QMessageBox::information(0, "Information", "Operation Complete");
-
-
 }
 
 void GLW::keyPressEvent(QKeyEvent* pe)
@@ -169,8 +147,8 @@ void GLW::keyPressEvent(QKeyEvent* pe)
 }
 void GLW::step_forward()
 {
-    zTra += cos(-yRot*PI/180) * 0.05;
-    xTra += sin(-yRot*PI/180) * 0.05;
+    zTra += cos(-yRot*PI/180) * 0.25;
+    xTra += sin(-yRot*PI/180) * 0.25;
 
     qDebug() << yRot << " X_grad ";
     qDebug() << cos(-yRot*PI/180) * 0.05 << " X_step ";
@@ -299,4 +277,110 @@ void GLW::startTextur()
                      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
                      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
+}
+void GLW::createWall(int x1, int z1, int x2, int z2, int height, int rgb1, int rgb2, int rgb3)
+{
+    GLfloat q1,w1,q2,w2,h;
+    GLubyte r1,r2,r3;
+    q1 = x1;
+    w1 = z1;
+    q2 = x2;
+    w2 = z2;
+    h = height;
+    r1 = rgb1;
+    r2 = rgb2;
+    r3 = rgb3;
+
+    glColor3ub( r1, r2 ,r3  );
+    glBegin(GL_POLYGON);
+      glVertex3f(q1,0,w1);
+      glVertex3f(q1,h,w1);
+      glVertex3f(q2,h,w2);
+      glVertex3f(q2,0,w2);
+    glEnd();
+}
+void GLW::createGalery()
+{
+    createStart = false;
+
+    QFile projectFile("qwe.txt");
+    QString textData;
+    if(!projectFile.open(QIODevice::ReadOnly))
+    {
+        qDebug() << "Error read";
+    }
+    textData = projectFile.readAll();
+
+
+    bool flag = true;
+    QString x1,  z1,  x2,  z2,  height,  rgb1,  rgb2,  rgb3 , alfa;
+    int index = 0;
+    QString tempValue = "";
+    for(int i = 6; i<textData.length();i++)
+    {
+        if(textData[i] == 'P')
+        {
+            return;
+        }
+        if(textData[i] == '\n')
+        {
+           index = 0;
+          // qDebug() <<  x1 <<  z1 <<  x2 <<  z2 <<  rgb1 <<  rgb2 << rgb3 << alfa <<  height;
+           createWall(x1.toInt(),z1.toInt(),x2.toInt(),z2.toInt(),height.toInt(),rgb1.toInt(),rgb2.toInt(),rgb3.toInt());
+
+           continue;
+        }
+        if(flag == true)
+        {
+            if(textData[i] == '\t')
+            {
+                switch(index)
+                {
+                    case 0:
+                        x1 = tempValue;
+                    break;
+
+                    case 1:
+                        z1 = tempValue;
+                    break;
+
+                    case 2:
+                        x2 = tempValue;
+                    break;
+
+                    case 3:
+                        z2 = tempValue;
+                    break;
+
+                    case 4:
+                        rgb1 = tempValue;
+                    break;
+
+                    case 5:
+                        rgb2 = tempValue;
+                    break;
+
+                    case 6:
+                        rgb3 = tempValue;
+                    break;
+
+                    case 7:
+                        alfa = tempValue;
+                    break;
+
+                    case 8:
+                        height = tempValue;
+                    break;
+                }
+                index++;
+
+               // qDebug() << tempValue;
+                tempValue = "";
+            }
+            else
+            {
+                tempValue += textData[i];
+            }
+        }
+    }
 }

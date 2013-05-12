@@ -60,6 +60,7 @@ void Scene3D::paintGL()
 
    drawAxis();
    drawFigure(); 
+   qDebug() << "sadfsdfsdfsdf";
 }
 
 void Scene3D::mousePressEvent(QMouseEvent* pe)
