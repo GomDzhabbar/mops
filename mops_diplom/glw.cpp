@@ -111,7 +111,7 @@ void GLW::resizeGL(int width, int height)
 
     //-- показывает направление откуда и куда смотреть на сцену ----////
     //glMatrixMode (GL_MODELVIEW);
-    //gluLookAt (150, 150, 150, 0, 0, 0, 0, 100, 0);
+    gluLookAt (150, 150, 150, 0, 0, 0, 0, 100, 0);
 
     glMatrixMode(GL_MODELVIEW);
 }
